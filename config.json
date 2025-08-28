@@ -1,0 +1,6 @@
+{
+  "TargetDeviceId": "",
+  "TargetVolume": 100,
+  "PollingIntervalSeconds": 1,
+  "Verbose": false
+}
