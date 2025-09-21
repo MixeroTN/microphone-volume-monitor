@@ -1,5 +1,5 @@
 # Microphone Volume Monitor - PowerShell Implementation
-# Monitors and maintains microphone volume at 100%
+# Monitors and maintains microphone volume at the desired value (from config.json)
 
 param(
     [string]$TargetDeviceId,
