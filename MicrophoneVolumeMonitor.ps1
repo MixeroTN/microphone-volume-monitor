@@ -138,7 +138,7 @@ function Find-TargetMicrophone {
             
             # Method 1: Use SoundVolumeView to find default capture microphone
             $svv = "${env:ProgramFiles}\SoundVolumeView\SoundVolumeView.exe"
-            $svvPortable = ".\SoundVolumeView.exe"
+            $svvPortable = Join-Path $PSScriptRoot "SoundVolumeView.exe"
             
             $svcPath = $null
             if (Test-Path $svv) { $svcPath = $svv }
@@ -342,7 +342,7 @@ function Get-MicrophoneVolume {
     try {
         # Try using SoundVolumeView if available
         $svv = "${env:ProgramFiles}\SoundVolumeView\SoundVolumeView.exe"
-        $svvPortable = ".\SoundVolumeView.exe"
+        $svvPortable = Join-Path $PSScriptRoot "SoundVolumeView.exe"
         
         $svcPath = $null
         if (Test-Path $svv) { $svcPath = $svv }
@@ -515,7 +515,7 @@ function Set-MicrophoneVolume {
         
         # Method 1: Try SoundVolumeView
         $svv = "${env:ProgramFiles}\SoundVolumeView\SoundVolumeView.exe"
-        $svvPortable = ".\SoundVolumeView.exe"
+        $svvPortable = Join-Path $PSScriptRoot "SoundVolumeView.exe"
         
         $svcPath = $null
         if (Test-Path $svv) { $svcPath = $svv }
@@ -575,9 +575,10 @@ function Install-SoundVolumeView {
     $svvUrl = "https://www.nirsoft.net/utils/soundvolumeview.zip"
     $svvZip = "$env:TEMP\soundvolumeview.zip"
     $svvDir = "$env:TEMP\SoundVolumeView"
+    $svvLocal = Join-Path $PSScriptRoot "SoundVolumeView.exe"
     
     try {
-        if (-not (Test-Path ".\SoundVolumeView.exe")) {
+        if (-not (Test-Path $svvLocal)) {
             Write-Log "Downloading SoundVolumeView utility..." "INFO"
             
             # Create download directory
@@ -591,8 +592,8 @@ function Install-SoundVolumeView {
             # Extract
             Expand-Archive -Path $svvZip -DestinationPath $svvDir -Force
             
-            # Copy to current directory
-            Copy-Item "$svvDir\SoundVolumeView.exe" ".\SoundVolumeView.exe" -Force
+            # Copy to script directory
+            Copy-Item "$svvDir\SoundVolumeView.exe" $svvLocal -Force
             
             # Cleanup
             Remove-Item $svvZip -Force -ErrorAction SilentlyContinue

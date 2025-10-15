@@ -6,7 +6,8 @@ param(
     [switch]$ShowStatus
 )
 
-$monitorPath = ".\MicrophoneVolumeMonitor.ps1"
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$monitorPath = Join-Path $scriptRoot "MicrophoneVolumeMonitor.ps1"
 
 # Function to write status (only if not silent)
 function Write-Status {
@@ -22,7 +23,7 @@ if (-not $Silent -and -not $ShowStatus -and $Host.UI.RawUI.WindowTitle -ne "Admi
     
     # Restart this script with -Silent in hidden mode
     $scriptPath = $MyInvocation.MyCommand.Path
-    Start-Process powershell.exe -ArgumentList "-WindowStyle Hidden -ExecutionPolicy Bypass -File `"$scriptPath`" -Silent" -WindowStyle Hidden
+    Start-Process powershell.exe -ArgumentList "-WindowStyle Hidden -ExecutionPolicy Bypass -File `"$scriptPath`" -Silent" -WindowStyle Hidden -WorkingDirectory $scriptRoot
     
     Write-Status "Monitor startup initiated in background. Check Task Manager for powershell.exe processes." "Green"
     Write-Status "Log file: $env:TEMP\MicrophoneVolumeMonitor.log" "Cyan"
@@ -46,6 +47,7 @@ $processArgs = @(
 $processStartInfo = New-Object System.Diagnostics.ProcessStartInfo
 $processStartInfo.FileName = "powershell.exe"
 $processStartInfo.Arguments = $processArgs -join " "
+$processStartInfo.WorkingDirectory = $scriptRoot
 $processStartInfo.UseShellExecute = $false
 $processStartInfo.CreateNoWindow = $true
 $processStartInfo.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden
